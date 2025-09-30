@@ -1,154 +1,162 @@
-README.md: Lab 17 - Spark NLP Pipeline
-Tổng quan
-Dự án xây dựng pipeline NLP bằng PySpark để xử lý tập dữ liệu C4 (c4-train.00000-of-01024-30K.json.gz). Pipeline gồm:
+# [1] Lab 17 - Spark NLP Pipeline
 
-Đọc 1000 bản ghi từ D:\c4-train.00000-of-01024-30K.json.gz.
-Tiền xử lý: RegexTokenizer, StopWordsRemover.
-Vector hóa: HashingTF (numFeatures=20000), IDF.
-Chuyển vector TF-IDF thành chuỗi bằng UDF.
-Lưu kết quả vào C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt.
-Ghi log vào log/lab17_pipeline.log.
+## [2] Tổng quan
+Dự án xây dựng **pipeline NLP** bằng **PySpark** để xử lý tập dữ liệu **C4** (`c4-train.00000-of-01024-30K.json.gz`).
 
+Pipeline gồm:
+1. Đọc **1000 bản ghi** từ `D:\c4-train.00000-of-01024-30K.json.gz`
+2. Tiền xử lý: `RegexTokenizer`, `StopWordsRemover`
+3. Vector hóa: `HashingTF` (`numFeatures=20000`), `IDF`
+4. Chuyển vector TF-IDF thành chuỗi bằng **UDF**
+5. Lưu kết quả: `C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt`
+6. Ghi log: `log/lab17_pipeline.log`
 
-Yêu cầu
+---
 
-Hệ điều hành: Windows 10/11
-Phần mềm:
+## [3] Yêu cầu
+- **Hệ điều hành:** Windows 10/11  
+- **Phần mềm:**
+  - Python 3.9  
+  - PySpark 3.5.1  
+    ```bash
+    pip install pyspark==3.5.1
+    ```
+  - JDK 17
+- **Dữ liệu:**  
+  Tệp `c4-train.00000-of-01024-30K.json.gz` đặt tại `D:\`
 
-Python 3.9
-PySpark 3.5.1 (pip install pyspark==3.5.1)
-JDK 17
+---
 
+## [4] Cài đặt
 
-Dữ liệu: c4-train.00000-of-01024-30K.json.gz tại D:\ 
-
-
-Cài đặt
-
-Cài PySpark:
-bashpip install pyspark==3.5.1
-
-Cài JDK 17:
-
-Tải: Oracle JDK
-Kiểm tra: java -version
-
-
-Chuẩn bị dữ liệu:
-
-Đặt c4-train.00000-of-01024-30K.json.gz vào D:\.
-Kiểm tra: dir D:\c4-train.00000-of-01024-30K.json.gz
-
-
-Cấp quyền:
-
-Đảm bảo quyền ghi cho C:\Users\Quan\Desktop\results:
-bashicacls C:\Users\Quan\Desktop\results /grant Everyone:F
-
-
-
-Xóa tệp/thư mục sai:
-
-Nếu lab17_pipeline_output.txt sai định dạng:
-bashrmdir C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
-del C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
-
-
-
-
-
-Chạy mã
-
-Lưu mã:
-
-Copy mã từ Mã nguồn vào C:\Users\Quan\PycharmProjects\PythonProject2\lab17_pipeline.py.
-
-
-Chạy:
-
-PowerShell:
-bashcd C:\Users\Quan\PycharmProjects\PythonProject2
-.\.venv\Scripts\python.exe lab17_pipeline.py
-(Chạy với quyền Administrator)
-PyCharm:
-
-Mở PyCharm với quyền Administrator.
-Chạy lab17_pipeline.py.
-
-
-
+### [4.1] Cài PySpark
+```bash
+pip install pyspark==3.5.1
+[4.2] Cài JDK 17
+Tải: Oracle JDK 17
 
 Kiểm tra:
 
-Log: C:\Users\Quan\PycharmProjects\PythonProject2\log/lab17_pipeline.log
-Kết quả: C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt (~1000 dòng vector TF-IDF, ví dụ: (20000,[0,1,2],[0.123,0.456,0.789]))
-Đếm dòng: (Get-Content C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt).Length
+bash
+Sao chép mã
+java -version
+[4.3] Chuẩn bị dữ liệu
+Đặt tệp dữ liệu vào D:\:
 
+bash
+Sao chép mã
+dir D:\c4-train.00000-of-01024-30K.json.gz
+[4.4] Cấp quyền cho thư mục kết quả
+bash
+Sao chép mã
+icacls C:\Users\Quan\Desktop\results /grant Everyone:F
+[4.5] Xóa tệp/thư mục sai
+Nếu tệp kết quả bị sai định dạng (ví dụ bị ghi nhầm thành thư mục):
 
-
-
-Mã nguồn
-Tệp lab17_pipeline.py:lab17_pipeline.pyx-python•
-Xử lý lỗi
-
-Lỗi PermissionError: [Errno 13] Permission denied:
-
-Giải pháp:
-
-Cấp quyền: icacls C:\Users\Quan\Desktop\results /grant Everyone:F
-Chạy với quyền Administrator.
-Đóng trình soạn thảo nếu tệp bị khóa.
-
-
-
-
-Lỗi tệp đầu ra là thư mục:
-
-Giải pháp:
-
-Xóa:
-bashrmdir C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
+bash
+Sao chép mã
+rmdir C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
 del C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
+[5] Chạy mã
+[5.1] Lưu mã
+Lưu tệp lab17_pipeline.py vào:
 
-Mã tự động xóa trước khi ghi.
+makefile
+Sao chép mã
+C:\Users\Quan\PycharmProjects\PythonProject2\lab17_pipeline.py
+[5.2] Chạy bằng PowerShell
+powershell
+Sao chép mã
+cd C:\Users\Quan\PycharmProjects\PythonProject2
+.\.venv\Scripts\python.exe lab17_pipeline.py
+Lưu ý: Chạy PowerShell với quyền Administrator
 
+[5.3] Chạy bằng PyCharm
+Mở PyCharm bằng quyền Administrator
 
+Chạy file lab17_pipeline.py
 
+[5.4] Kiểm tra kết quả
+Log:
 
-Lỗi HADOOP_HOME:
+lua
+Sao chép mã
+C:\Users\Quan\PycharmProjects\PythonProject2\log\lab17_pipeline.log
+Kết quả:
 
-Giải pháp: Mã dùng collect và ghi bằng Python, không cần Hadoop. Nếu cần write.text, tải winutils.exe từ cdarlint/winutils.
+swift
+Sao chép mã
+C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt
+(~1000 dòng vector TF-IDF, ví dụ:
 
+css
+Sao chép mã
+(20000,[0,1,2],[0.123,0.456,0.789])
+```)
 
-Lỗi dữ liệu:
+Đếm số dòng:
 
-Giải pháp: Đảm bảo c4-train.00000-of-01024-30K.json.gz ở D:\.
+powershell
+Sao chép mã
+(Get-Content C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt).Length
+[6] Mã nguồn
+Tệp chính: lab17_pipeline.py
 
+[7] Xử lý lỗi
+[7.1] Lỗi PermissionError: [Errno 13] Permission denied
+Giải pháp:
 
+bash
+Sao chép mã
+icacls C:\Users\Quan\Desktop\results /grant Everyone:F
+Chạy với quyền Administrator
 
+Đóng trình soạn thảo nếu tệp bị khóa
 
-Kết quả
+[7.2] Lỗi tệp đầu ra là thư mục
+Giải pháp:
 
-Log: log/lab17_pipeline.log ghi các bước thực thi.
-Kết quả: C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt chứa ~1000 dòng vector TF-IDF.
-Kiểm tra: (Get-Content C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt).Length
+bash
+Sao chép mã
+rmdir C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
+del C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt
+Mã đã tự động xóa trước khi ghi lại
 
+[7.3] Lỗi HADOOP_HOME
+Giải pháp:
+Mã sử dụng collect() và ghi bằng Python, không cần Hadoop
+Nếu cần dùng write.text(), tải winutils.exe từ cdarlint/winutils
 
-Tùy chọn
-Để lưu cả text và features_str:
+[7.4] Lỗi dữ liệu
+Giải pháp:
+Đảm bảo tệp c4-train.00000-of-01024-30K.json.gz nằm trong D:\
 
-Thay phần lưu kết quả:
-pythonfrom pyspark.sql.functions import concat_ws
+[8] Kết quả
+Log: log/lab17_pipeline.log ghi lại các bước thực thi
+
+Kết quả: C:/Users/Quan/Desktop/results/lab17_pipeline_output.txt chứa khoảng 1000 dòng vector TF-IDF
+
+Kiểm tra số dòng:
+
+powershell
+Sao chép mã
+(Get-Content C:\Users\Quan\Desktop\results\lab17_pipeline_output.txt).Length
+[9] Tùy chọn: Lưu cả text và features_str
+Chỉnh phần lưu kết quả trong mã:
+
+python
+Sao chép mã
+from pyspark.sql.functions import concat_ws, col
+
 result = result.withColumn("combined", concat_ws(" | ", col("text"), col("features_str")))
 features_data = result.select("combined").coalesce(1).collect()
+
 with open(output_path, "w", encoding="utf-8") as f:
     for row in features_data:
         f.write(f"{row['combined']}\n")
-
-
-
-Tham khảo
-
+[10] Tham khảo
 Apache Spark
+
 C4 Dataset
-PySpark ML
+
+PySpark MLlib
