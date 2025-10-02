@@ -66,3 +66,12 @@
 - Tài liệu Apache Spark
 - Thư viện PySpark MLlib
 - Thông tin về bộ dữ liệu C4
+## [9] Yêu cầu bổ sung
+- Thêm **`limitDocuments`**: dễ dàng thay đổi số lượng tài liệu đọc từ C4 (mặc định 1000).
+- Thêm **đo thời gian thực thi chi tiết** cho từng giai đoạn (đọc dữ liệu, huấn luyện pipeline, biến đổi dữ liệu).
+- Thêm **Normalizer** vào pipeline: chuẩn hóa vector TF-IDF.
+- Thêm **tìm kiếm tài liệu tương tự**:
+  - Chọn 1 tài liệu từ tập dữ liệu đã xử lý.
+  - Tính **cosine similarity** so với tất cả các tài liệu khác.
+  - In ra **Top-K tài liệu giống nhất** (ví dụ K=5) vào log.
+
