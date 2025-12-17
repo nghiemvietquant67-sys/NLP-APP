@@ -22,8 +22,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run Lab 1 tests
+      - name: Run Lab 1 tests (debug runner)
         run: |
-          python test/lab_1.py
-        # Keep the workflow non-failing even if the test script returns non-zero
-        continue-on-error: false
+          echo "==== Running debug test runner ===="
+          python test/run_lab1_debug.py
