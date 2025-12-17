@@ -5,8 +5,7 @@ Test file combining all tokenizer implementations and tests
 import sys
 sys.path.insert(0, 'c:\\Users\\Quan\\.vscode-R\\NLP-APP')
 
-from src.preprocessing.simple_tokenizer import SimpleTokenizer
-from src.preprocessing.regex_tokenizer import RegexTokenizer
+from src.lab_1 import SimpleTokenizer, RegexTokenizer, CountVectorizer
 
 
 def test_tokenizers():
@@ -66,3 +65,33 @@ def test_tokenizers():
 
 if __name__ == "__main__":
     test_tokenizers()
+    # --- Lab 2 tests: Count Vectorizer ---
+    print("\n" + "=" * 80)
+    print("LAB 2: COUNT VECTORIZATION (RUNNING INSIDE lab_1 TEST)")
+    print("=" * 80)
+
+    # Reuse RegexTokenizer for vectorizer
+    tokenizer = RegexTokenizer()
+    vectorizer = CountVectorizer(tokenizer)
+
+    corpus = [
+        "I love NLP.",
+        "I love programming.",
+        "NLP is a subfield of AI."
+    ]
+
+    vectors = vectorizer.fit_transform(corpus)
+    vocabulary = vectorizer.vocabulary_
+
+    print(f"\n[VOCABULARY] (size: {len(vocabulary)})")
+    sorted_vocab = sorted(vocabulary.items(), key=lambda x: x[1])
+    for token, idx in sorted_vocab:
+        print(f"  [{idx:2d}] '{token}'")
+
+    print(f"\n[DOCUMENT-TERM MATRIX]")
+    print(f"Shape: {len(vectors)} documents × {len(vocabulary)} features\n")
+
+    for doc_idx, vector in enumerate(vectors, 1):
+        print(f"Doc {doc_idx:2d}: {vector}")
+
+    print("\n✓ Lab 2 test completed (vocabulary & document-term matrix displayed)")
