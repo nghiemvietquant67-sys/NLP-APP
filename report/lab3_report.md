@@ -1,94 +1,94 @@
-# Lab 3 Report — Word Embeddings (Gensim + PySpark)
+# Báo cáo Lab 3 — Word Embeddings (Gensim + PySpark)
 
 **Harito ID:** 2025-09-25  
 **Ngày:** 2025-12-17
 
 ---
 
-## ✅ Summary
-This lab implements word embeddings experiments using **gensim** (pre-trained GloVe and training Word2Vec from a small dataset) and a PySpark demo for scaling Word2Vec training. The repository includes:
+## ✅ Tóm tắt
+Bài lab này thực hiện các thí nghiệm embedding từ với **gensim** (dùng model GloVe đã huấn luyện sẵn và huấn luyện Word2Vec trên bộ dữ liệu nhỏ) cùng một demo PySpark để mở rộng huấn luyện Word2Vec. Repository bao gồm:
 
-- `src/representations/word_embedder.py` — WordEmbedder class that loads `glove-wiki-gigaword-50`, provides `get_vector`, `get_similarity`, `get_most_similar`, and `embed_document` methods. ✅
-- `test/lab4_test.py` — smoke/demo test that prints examples (king vector, similarities, most-similar words, document embedding). ✅
-- `test/lab4_embedding_training_demo.py` — trains a small Word2Vec model on `UD_English-EWT` and saves it. ✅
-- `test/lab4_spark_word2vec_demo.py` — PySpark example that tokenizes C4 and trains a Word2Vec model (advanced). ✅
-- `notebook/Lab_3_Word_Embeddings.ipynb` — interactive notebook with examples and instructions. ✅
+- `src/representations/word_embedder.py` — lớp `WordEmbedder` tải `glove-wiki-gigaword-50`, cung cấp `get_vector`, `get_similarity`, `get_most_similar`, và `embed_document`. ✅
+- `test/lab4_test.py` — test/demo smoke in ra ví dụ (vector của `king`, similarity, từ tương tự, embedding document). ✅
+- `test/lab4_embedding_training_demo.py` — huấn luyện một mô hình Word2Vec nhỏ trên `UD_English-EWT` và lưu lại. ✅
+- `test/lab4_spark_word2vec_demo.py` — ví dụ PySpark tokenization trên C4 và huấn luyện Word2Vec (nâng cao). ✅
+- `notebook/Lab_3_Word_Embeddings.ipynb` — notebook tương tác với ví dụ và hướng dẫn. ✅
 
-**Progress vs checklist:** 10/12 implementation items completed (visualization steps remain to be added), and report & analysis are documented here.
+**Tiến độ so với checklist:** 10/12 mục đã hoàn thành (phần visualization còn để thêm vào notebook).
 
 ---
 
-## Implementation (what I did) 🔧
-1. Task 1 — Pre-trained embeddings (Gensim)
-   - Implemented `WordEmbedder` which loads models via `gensim.downloader.load(model_name)`; default: `glove-wiki-gigaword-50` (50-dimensional).  
-   - Implemented methods: `get_vector(word)`, `get_similarity(word1, word2)`, `get_most_similar(word, top_n)`.  
+## Triển khai (những gì đã làm) 🔧
+1. Task 1 — Embeddings đã huấn luyện sẵn (Gensim)
+   - Triển khai `WordEmbedder` sử dụng `gensim.downloader.load(model_name)`; mặc định `glove-wiki-gigaword-50` (50 chiều).
+   - Các phương thức: `get_vector(word)`, `get_similarity(word1, word2)`, `get_most_similar(word, top_n)`.
 
-2. Task 2 — Document embedding
-   - Implemented `embed_document(document, tokenizer)` that averages known word vectors (ignores OOV tokens) and returns a zero vector if no known tokens are present.
+2. Task 2 — Embedding document
+   - Triển khai `embed_document(document, tokenizer)` trung bình các vector từ biết (bỏ qua token OOV) và trả về vector zero nếu không có token hợp lệ.
 
-3. Task 3 — Training Word2Vec (gensim)
-   - `test/lab4_embedding_training_demo.py` streams text from `data/UD_English-EWT/en_ewt-ud-train.txt`, trains a small Word2Vec model (`vector_size=50`) and saves it to `results/word2vec_ewt.model`.
+3. Task 3 — Huấn luyện Word2Vec (gensim)
+   - `test/lab4_embedding_training_demo.py` stream văn bản từ `data/UD_English-EWT/en_ewt-ud-train.txt`, huấn luyện Word2Vec nhỏ (`vector_size=50`) và lưu sang `results/word2vec_ewt.model`.
 
-4. Task 4 — Training Word2Vec with Spark (advanced)
-   - `test/lab4_spark_word2vec_demo.py` demonstrates reading `data/c4-train...json`, simple cleaning and tokenization (lowercase, remove punctuation), and trains a `pyspark.ml.feature.Word2Vec` model (vectorSize=100). This is a minimal demo you can expand for larger datasets.
+4. Task 4 — Huấn luyện Word2Vec với Spark (nâng cao)
+   - `test/lab4_spark_word2vec_demo.py` minh hoạ đọc `data/c4-train...json`, làm sạch & tokenization đơn giản (lowercase, loại dấu câu) và huấn luyện `pyspark.ml.feature.Word2Vec` (vectorSize=100). Đây là demo tối thiểu có thể mở rộng cho dữ liệu lớn hơn.
 
 5. Task 5 — Visualization (PCA / t-SNE)
-   - Not yet implemented in the notebook (planned next step). I include exact code snippets in the “How to reproduce & visualization” section below so you can run it locally.
+   - Chưa thêm vào notebook (bước kế tiếp). Tôi đã chuẩn bị snippet code chi tiết trong phần “Cách tái tạo & Visualization” bên dưới để bạn chạy cục bộ.
 
 ---
 
-## How to run (reproduce) ▶️
-Prerequisites:
-- Python 3.8+ and pip
-- Install dependencies: `pip install -r requirements.txt` (adds `gensim`; for Spark jobs add `pyspark` if needed)
-- The first run of the pre-trained model will download `glove-wiki-gigaword-50` (~65MB).
+## Cách chạy (tái tạo) ▶️
+Yêu cầu:
+- Python 3.8+ và pip
+- Cài dependencies: `pip install -r requirements.txt` (sẽ cài `gensim`; với job Spark cần thêm `pyspark` nếu chạy demo Spark)
+- Lần chạy đầu tiên model pre-trained sẽ tải `glove-wiki-gigaword-50` (~65MB).
 
-Commands / demos:
-- Run the smoke examples (downloads model on first run):
+Các lệnh / demo:
+- Chạy ví dụ smoke (tải model lần đầu):
   ```powershell
   python test/lab4_test.py
   ```
-  Expected outputs: printed vector dimension for `king`, similarity numbers for `king<>queen` and `king<>man`, top-10 words similar to `computer`, and a document embedding vector printed.
+  Kết quả mong đợi: in ra kích thước vector của `king`, giá trị similarity cho `king<>queen` và `king<>man`, top-10 từ tương tự `computer`, và vector embedding của một document.
 
-- Train a small gensim Word2Vec on UD_English-EWT (demo):
+- Huấn luyện Word2Vec nhỏ với gensim trên UD_English-EWT (demo):
   ```powershell
   python test/lab4_embedding_training_demo.py
   ```
-  Output: `results/word2vec_ewt.model` and a small printed sample of most similar words.
+  Kết quả: file `results/word2vec_ewt.model` và một ví dụ các từ tương tự được in ra.
 
-- Run the PySpark Word2Vec demo (requires Java + pyspark):
+- Chạy demo PySpark Word2Vec (cần Java + pyspark):
   ```powershell
   python test/lab4_spark_word2vec_demo.py
   ```
 
-Notebook (interactive exploration):
-- Open `notebook/Lab_3_Word_Embeddings.ipynb` in Jupyter Lab or VS Code and run cells sequentially.
+Notebook (khám phá tương tác):
+- Mở `notebook/Lab_3_Word_Embeddings.ipynb` trong Jupyter Lab hoặc VS Code và chạy các cell theo thứ tự.
 
 ---
 
-## Results & Analysis (what to expect) 📊
-- Example similarity values (approximate):
-  - `sim(king, queen)` should be high (close to 0.7–0.8 for GloVe-50) — indicates gender/royalty relation.
-  - `sim(king, man)` likely slightly lower than king<>queen, but still high.
-- `get_most_similar('computer')` will show words in computing domain (e.g., 'computers', 'software', 'hardware', 'pc').
-- Document embeddings (mean of word vectors) produce dense 50-dimensional vectors; they are suitable for downstream similarity checks and clustering.
+## Kết quả & Phân tích (mong đợi) 📊
+- Ví dụ giá trị similarity (xấp xỉ):
+  - `sim(king, queen)` thường cao (gần 0.7–0.8 với GloVe-50) — phản ánh quan hệ giới/tước vị.
+  - `sim(king, man)` thường thấp hơn một chút so với king<>queen nhưng vẫn cao.
+- `get_most_similar('computer')` trả về các từ thuộc lĩnh vực máy tính (ví dụ: 'computers', 'software', 'hardware', 'pc').
+- Embedding document (mean của các vector từ) tạo ra vector dày 50 chiều; phù hợp cho các tác vụ similarity và clustering.
 
-Notes on Self-trained vs Pre-trained models:
-- Pre-trained (GloVe) captures broad semantic relations from large corpora — good general-purpose semantics.
-- Self-trained Word2Vec on UD_English-EWT will capture domain/genre-specific associations (useful if target domain is similar to the training set) but may be less robust if training data is small.
+Ghi chú về model tự huấn luyện vs model pre-trained:
+- Model pre-trained (GloVe) nắm bắt quan hệ ngữ nghĩa rộng rãi từ tập dữ liệu lớn — phù hợp cho ngữ nghĩa tổng quát.
+- Model tự huấn luyện (Word2Vec trên EWT) sẽ phản ánh quan hệ đặc thù domain/genre của dữ liệu huấn luyện (hữu ích nếu domain mục tiêu tương đồng) nhưng kém bền vững nếu dữ liệu nhỏ.
 
 ---
 
-## Visualization (how to produce plots locally) ✨
-Use PCA or t-SNE to reduce word vectors to 2D for scatter plots.
-Example (run in notebook):
+## Visualization (cách tạo đồ thị cục bộ) ✨
+Dùng PCA hoặc t-SNE để giảm vector từ về 2 chiều và vẽ scatter plot.
+Ví dụ (chạy trong notebook):
 
 ```python
-# get vectors for selected words
+# lấy vectors cho các từ chọn lọc
 words = ['king','queen','man','woman','computer','software','apple','orange','bank','river']
 vectors = [we.get_vector(w) for w in words]
 
-# PCA (fast)
+# PCA (nhanh)
 from sklearn.decomposition import PCA
 pca = PCA(n_components=2)
 proj = pca.fit_transform(vectors)
@@ -101,33 +101,33 @@ for i,w in enumerate(words):
 plt.title('PCA of selected word vectors')
 plt.show()
 
-# Optional: t-SNE for non-linear layout
+# Tùy chọn: t-SNE cho bố cục phi tuyến
 from sklearn.manifold import TSNE
 tsne = TSNE(n_components=2, random_state=42)
 tsne_proj = tsne.fit_transform(vectors)
-# plot similar to PCA
+# vẽ tương tự như PCA
 ```
 
-Interpretation:
-- Related words (e.g., `king` & `queen`, `computer` & `software`) should cluster nearby; gender pairs may align along a direction.
+Diễn giải:
+- Những từ có liên quan (ví dụ: `king` & `queen`, `computer` & `software`) thường nhóm gần nhau; cặp từ liên quan tới giới (gender) có thể nằm theo cùng một hướng.
 
 ---
 
-## Difficulties & Solutions ⚠️
-- Model download size/time: the GloVe model (~65MB) downloads on first use — note this in the notebook and warn users.  
-- OOV tokens: `get_vector` handles case-insensitive lookup and returns `None` for true OOV; `embed_document` ignores OOV tokens and returns a zero vector if no known tokens found.  
-- Training scale: training Word2Vec on the full C4 dataset needs cluster resources; the PySpark demo is a minimal starting point — for large-scale training use distributed cluster resources and adjust `minCount`, `vectorSize`, and workers.
+## Khó khăn & Giải pháp ⚠️
+- Kích thước/tốc độ tải model: model GloVe (~65MB) cần tải lần đầu — ghi chú rõ trong notebook để cảnh báo người dùng.
+- OOV tokens: `get_vector` hỗ trợ lookup không phân biệt hoa thường và trả `None` nếu OOV; `embed_document` bỏ qua OOV và trả vector zero nếu không có token hợp lệ.
+- Qui mô huấn luyện: huấn luyện Word2Vec trên toàn bộ C4 đòi hỏi tài nguyên phân tán; demo PySpark là bước bắt đầu tối thiểu — để huấn luyện quy mô lớn cần cluster và điều chỉnh `minCount`, `vectorSize`, số worker.
 
 ---
 
-## Tests & Validation ✅
-- Run `python test/lab4_test.py` for a quick smoke verification (prints examples).  
-- Run `python test/lab4_embedding_training_demo.py` to train and validate a small Word2Vec model on UD_English-EWT.  
-- Run `python test/lab4_spark_word2vec_demo.py` on a machine with Java + pyspark to test the Spark flow.
+## Tests & Kiểm nghiệm ✅
+- Chạy `python test/lab4_test.py` để kiểm tra nhanh (in ví dụ).
+- Chạy `python test/lab4_embedding_training_demo.py` để huấn luyện và kiểm nghiệm mô hình Word2Vec nhỏ trên UD_English-EWT.
+- Chạy `python test/lab4_spark_word2vec_demo.py` trên máy có Java + pyspark để kiểm tra luồng Spark.
 
 ---
 
-## References & Further Reading 📚
+## Tài liệu tham khảo & đọc thêm 📚
 - GloVe: Pennington, Socher, Manning (2014): https://nlp.stanford.edu/projects/glove/  
 - Word2Vec: Mikolov et al. (2013): https://arxiv.org/abs/1301.3781  
 - Gensim docs: https://radimrehurek.com/gensim/  
@@ -135,9 +135,9 @@ Interpretation:
 
 ---
 
-## Next steps (optional)
-- Add visualization cells to `notebook/Lab_3_Word_Embeddings.ipynb` (I can add PCA & t-SNE plotting code + sample output).  
-- Add a short comparison section that runs pre-trained vs self-trained similarity comparisons and documents differences in the report.  
-- Add CI smoke test (note: network download may be required to fetch pretrained model).  
+## Bước tiếp theo (tuỳ chọn)
+- Thêm cell visualization vào `notebook/Lab_3_Word_Embeddings.ipynb` (tôi có thể thêm code PCA & t-SNE cùng ảnh mẫu và commit).
+- Thêm phần so sánh ngắn giữa pre-trained và self-trained bằng cách chạy demo self-trained trên EWT và ghi nhận khác biệt vào báo cáo.
+- Thêm test smoke CI (lưu ý: có thể cần tải mạng để lấy model pre-trained).
 
-If you want I can now (A) add visualization code + produce sample plots (I will commit them), and (B) append a comparison section after running the self-trained demo on the EWT dataset — which should I do next? ✅
+Nếu bạn muốn, tôi có thể (A) thêm code visualization + tạo ảnh mẫu (tôi sẽ commit chúng), và (B) bổ sung phần so sánh sau khi chạy demo self-trained — bạn muốn tôi làm phần nào trước? ✅
