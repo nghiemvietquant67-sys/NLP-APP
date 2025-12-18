@@ -1,8 +1,8 @@
 ## Thông tin cá nhân
-- **Họ và tên**: Trần Minh Đức
-- **Mã sinh viên (MSV)**: 23001518
-- **Lớp**: 68KHDL  
-- **Ngày sinh**: 09/12/2005  
+- **Họ và tên**: Nghiêm Việt Quân
+- **Mã sinh viên (MSV)**: 22001632
+- **Lớp**: K67A4
+
 
 ---
 
@@ -389,3 +389,4 @@
       + Hiệu năng on-device, phát hiện Deepfake, watermarking.
 
 ---
+
